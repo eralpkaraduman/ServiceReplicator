@@ -31,6 +31,7 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/addServer', servers.addForm);
+app.get('/servers/:serverKey', servers.list);
 app.get('/servers', servers.list);
 app.post('/addServer', servers.add);
 app.get('/users', user.list);
@@ -60,7 +61,7 @@ app.locals({
     title: 'Service Replicator',
     navBarItems:[
     {title:"Add Server",path:"addServer"},
-    {title:"Servers",path:"servers"},
+    {title:"Servers",path:"servers"}
     ]
 });
 

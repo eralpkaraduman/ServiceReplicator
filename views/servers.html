@@ -2,19 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Bootstrap, from Twitter</title>
+    <title><%=title%></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
 
     <!-- Le styles -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-        }
-    </style>
     <link href="/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="/css/docs.css" rel="stylesheet">
 
 </head>
 
@@ -35,7 +31,12 @@
 
 
                     <% for(var i=0; i<navBarItems.length; i++) { %>
-                    <li class="active"><a href=<%= navBarItems[i].path %>><%= navBarItems[i].title %></a></li>
+                    
+
+                    <li <% if(navBarItems[i].path == "servers"){ %> class="active"<%}%> >
+                        <a href=<%= navBarItems[i].path %>><%= navBarItems[i].title %></a>
+                    </li>
+
                     <% } %>
 
 
@@ -45,23 +46,66 @@
     </div>
 </div>
 
-<div class="main">
+<div class="container">
     
-    <div class="box">
-      <div class="row-fluid">
-        <div class="column span3">
-            <li class="nav-header">Servers</li>
-            <ul class="nav nav-list nav-fixed-sidebar">
-                <li class="active"><a href="#">Home</a></li>
-                <li class="divider"></li>
-                <a href="/addServer">Add New Server</a></li>
+    <div class="row">
+        <div class="span3 bs-docs-sidebar">
+        
+            
+            <ul class="nav nav-list bs-docs-sidenav">
+                
+                <% for(var i=0; i<servers.length; i++) { %>
+                    
+                    <li class<% if(servers[i].key == displayedServer.key){ %> ="active"<%}%> >
+                        <a href="/servers/<%= servers[i].key %>">
+                            <%= servers[i].name %>
+                            <i class="icon-chevron-right"></i>
+                        </a>
+                    </li>
+
+                <% } %>
+
+
+                <li>
+                    <a href="/addServer"><i class="icon-plus-sign"></i>  Add New Server</a>
+                </li>
+
             </ul>
 
         </div>
-        <div class="span10">
+
+        <div class="span9">
           <!--Body content-->
+
+            <div class="page-header">
+                <h1><%=displayedServer.name%></h1>
+            </div>
+
+
+            <% for(var i=0; i<servers.length; i++) { %>
+<div>
+                <div class="input-append">
+                  <input class="span2" id="appendedDropdownButton" type="text">
+                  <div class="btn-group">
+                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                      Action
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      ...
+                    </ul>
+                  </div>
+                </div>
+</div>
+            <% } %>
+
+            <button class="btn btn-primary">
+                Add New Endpoint   <i class="icon-plus-sign"></i>
+            </button>
+
+
         </div>
-      </div>
+
     </div>
 
 
