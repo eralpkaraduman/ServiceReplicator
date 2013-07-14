@@ -7,11 +7,52 @@ var endpoints = require('./endpoints');
 
 //var servers = nStore.new('data/servers.db',function(){});
 
+exports.getServer = function(serverKey,callback){
+
+    servers.get(serverKey,function(err,doc,key){
+        if(err){
+            console.log("getServer error "+err);
+            callback(null)
+        }else{
+            doc.key = key;
+            callback(doc);
+        }
+    });
+}
+
 exports.addForm = function(req, res){
 
-    res.render('addServer');
+    servers.all(function (err, results) {
+        var serverList = [];
+
+        for (var key in results) {
+
+            serverList[serverList.length] = {
+                key:key,
+                name:results[key].name
+            }
+        }
+
+        res.render('addServer',{servers:serverList});
+    });
 
 };
+
+exports.getServerList = function(callback){
+    servers.all(function (err, results) {
+        var serverList = [];
+
+        for (var key in results) {
+
+            serverList[serverList.length] = {
+                key:key,
+                name:results[key].name
+            }
+        }
+
+        callback(serverList);
+    });
+}
 
 exports.add = function(req, res){
 

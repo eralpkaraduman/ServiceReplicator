@@ -56,17 +56,17 @@
 
                 <% for(var i=0; i<servers.length; i++) { %>
 
-                <li class>
-                <a href="/servers/<%= servers[i].key %>">
-                    <%= servers[i].name %>
-                    <i class="icon-chevron-right"></i>
-                </a>
+                <li<% if(servers[i].key == server.key){ %> class="active"<%}%> >
+                    <a href="/servers/<%= servers[i].key %>">
+                        <%= servers[i].name %>
+                        <i class="icon-chevron-right"></i>
+                    </a>
                 </li>
 
                 <% } %>
 
 
-                <li class="active">
+                <li class>
                     <a href="/addServer"><i class="icon-plus-sign"></i>  Add New Server</a>
                 </li>
 
@@ -79,7 +79,7 @@
 
 
             <div class="page-header">
-                <h1>Add Server</h1>
+                <h4>Add Endpoint To <%=server.name%></h4>
             </div>
 
             <form class="form-horizontal" action="/addServer" method="POST">
@@ -120,9 +120,6 @@
 
 </body>
 </html>
-
-
-
 
 
 

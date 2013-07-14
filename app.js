@@ -7,6 +7,7 @@ var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
   , servers = require('./routes/servers')
+  ,endpoints = require('./routes/endpoints')
   , http = require('http')
   , path = require('path');
 
@@ -29,11 +30,12 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
+app.get('/', servers.list);
 app.get('/addServer', servers.addForm);
 app.get('/servers/:serverKey', servers.list);
 app.get('/servers', servers.list);
 app.post('/addServer', servers.add);
+app.get('/addEndpoint/:serverKey',endpoints.add);
 app.get('/users', user.list);
 
 /*
@@ -60,8 +62,8 @@ app.use(function(req, res, next){
 app.locals({
     title: 'Service Replicator',
     navBarItems:[
-    {title:"Add Server",path:"addServer"},
-    {title:"Servers",path:"servers"}
+    //{title:"Add Server",path:"addServer"},
+    //{title:"Servers",path:"servers"}
     ]
 });
 
