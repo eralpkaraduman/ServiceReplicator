@@ -82,19 +82,19 @@
             </div>
 
 
-            <% for(var i=0; i<endpints.length; i++) { %>
+            <% for(var i=0; i<endpoints.length; i++) { %>
             <div>
                 <div class="input-append">
-                  <input class="span2" id="appendedDropdownButton" type="text">
-                  <div class="btn-group">
-                    <button class="btn dropdown-toggle" data-toggle="dropdown">
-                      Action
-                      <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                      ...
-                    </ul>
-                  </div>
+                    <span class="input-xlarge uneditable-input">/<%=endpoints[i].path%></span>
+
+                        <% if(endpoints[i].enabled == true){ %>
+                            <a href="/endpoints/<%=endpoints[i].key%>?status=disabled" class="btn btn-success">Enabled</a>
+                        <%}else{%>
+                            <a href="/endpoints/<%=endpoints[i].key%>?status=enabled" class="btn btn-danger">Disabled</a>
+                        <%}%>
+
+                        <a href="/endpoints/<%=endpoints[i].key%>" class="btn btn btn-primary">Edit</a>
+
                 </div>
             </div>
             <% } %>

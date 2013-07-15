@@ -4,6 +4,7 @@
  */
 
 var express = require('express')
+  ,expressValidator = require('express-validator')
   , routes = require('./routes')
   , user = require('./routes/user')
   , servers = require('./routes/servers')
@@ -18,6 +19,7 @@ app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
+app.use(expressValidator());
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
@@ -35,7 +37,10 @@ app.get('/addServer', servers.addForm);
 app.get('/servers/:serverKey', servers.list);
 app.get('/servers', servers.list);
 app.post('/addServer', servers.add);
-app.get('/addEndpoint/:serverKey',endpoints.add);
+app.get('/endpoints/:endpointKey',endpoints.editForm);
+app.get('/endpoints/:endpointKey',endpoints.edit);
+app.get('/addEndpoint/:serverKey',endpoints.addForm);
+app.post('/addEndpoint/:serverKey',endpoints.add);
 app.get('/users', user.list);
 
 /*

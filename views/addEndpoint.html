@@ -77,33 +77,62 @@
         <div class="span9">
             <!--Body content-->
 
-
-            <div class="page-header">
-                <h4>Add Endpoint To <%=server.name%></h4>
-            </div>
-
-            <form class="form-horizontal" action="/addServer" method="POST">
+            <form class="form-horizontal" action="/addEndpoint/<%=server.key%>" method="POST">
                 <fieldset>
 
-                    <!-- Text input-->
-                    <div class="control-group">
-                        <label class="control-label" for="serverName">Server Name</label>
-                        <div class="controls">
-                            <input id="serverName" name="serverName" type="text" placeholder="myReplicatedServer" class="input-xlarge" required="">
+                    <!-- Form Name -->
+                    <legend>Add Endpoint to <%=server.name%></legend>
 
+                    <!-- Prepended text-->
+                    <div class="control-group">
+                        <label class="control-label" for="path">Path</label>
+                        <div class="controls">
+                            <div class="input-prepend">  if (typeof foo == 'undefined')
+                                <span class="add-on">/</span>
+                                <input id="path" name="path" class="input-xlarge" placeholder="my/endpoint/path.php" type="text" value="<%=(locals.path)?path:''%>" >
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Textarea -->
+                    <div class="control-group">
+                        <label class="control-label" for="defaultResponse">Default Response</label>
+                        <div class="controls">
+                            <textarea id="defaultResponse" name="defaultResponse" placeholder="{'success': true,data: [{'name': 'a','value': 1},{'name': 'b','value': 2}]}" ><%if(locals.defaultResponse){%><%=defaultResponse%><%}%></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Multiple Radios -->
+                    <div class="control-group">
+                        <label class="control-label" for="enabled">Status</label>
+                        <div class="controls">
+                            <label class="radio" for="enabled-0">
+                                <input type="radio" name="enabled" id="enabled-0" value="Enabled" <%if(locals.enabled){ if(enabled==true){%>
+                                    checked="checked"
+                                <%}}%>>
+                                Enabled
+                            </label>
+                            <label class="radio" for="enabled-1">
+                                <input type="radio" name="enabled" id="enabled-1" value="Disabled" <%if(locals.enabled){ if(enabled==false){%>
+                                    checked="checked"
+                                <%}}%>>
+                                Disabled
+                            </label>
                         </div>
                     </div>
 
                     <!-- Button -->
                     <div class="control-group">
-                        <label class="control-label" for="addServerButton"></label>
+                        <label class="control-label" for="addEndpoint"></label>
                         <div class="controls">
-                            <button id="addServerButton" name="addServerButton" class="btn btn-default">Add</button>
+                            <button id="addEndpoint" name="addEndpoint" class="btn btn-default">Add Endpoint</button>
                         </div>
                     </div>
 
                 </fieldset>
             </form>
+
 
         </div>
 

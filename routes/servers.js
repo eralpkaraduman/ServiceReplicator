@@ -89,15 +89,17 @@ exports.list = function(req, res){
                 displayedServerData = serverList[0];
             }
 
-            console.log("sl "+util.inspect(serverList) );
-            console.log("dsd "+util.inspect(displayedServerData) );
+            //console.log("sl "+util.inspect(serverList) );
+            //console.log("dsd "+util.inspect(displayedServerData) );
 
-            endpoints.listEndPoints(displayedServerData.key,function(endpointsResult){
+        endpoints.listEndPoints(displayedServerData.key,function(endpointsResult){
+
+                console.log('endpoints '+endpointsResult);
 
                 res.render('servers',{
                     servers:serverList,
                     displayedServer:displayedServerData,
-                    endpints:endpointsResult
+                    endpoints:endpointsResult
                 });
 
             });
