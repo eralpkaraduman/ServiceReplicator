@@ -172,12 +172,17 @@ exports.add = function(req,res){
             req.checkBody('path', 'invalid path').notEmpty().notContains("?").notContains("&");
             req.checkBody('defaultResponse', 'invalid defaultResponse').notEmpty();
             req.checkBody('enabled', 'invalid enabled status').notEmpty().isIn(['Enabled','Disabled']);
+            req.checkBody('httpStatusCode','invalid HTTP status code').notEmpty().isNumeric();
+            req.checkBody('contentType','invalid HTTP status code').notEmpty();
+
 
             var newEndpoint = {
                 enabled:(req.body.enabled=="Enabled"?true:false),
                 path:req.body.path,
                 defaultResponse:req.body.defaultResponse,
-                serverKey:serverKey
+                serverKey:serverKey,
+                httpStatusCode:req.body.httpStatusCode,
+                contentType:req.body.contentType
             };
 
             console.log("thisIsNotNullWhenUpdating "+thisIsNotNullWhenUpdating);
@@ -218,6 +223,7 @@ exports.handle = function(req,res, next){
                 var obj = results[key];
 
                 if(obj.path == pathName){
+                    res.writeHead(Number(obj.httpStatusCode), {'content-type':String(obj.contentType)});
                     res.end(obj.defaultResponse);
                     return;
                 }

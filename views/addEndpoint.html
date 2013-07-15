@@ -107,6 +107,21 @@
                         </div>
                     </div>
 
+                    <div class="control-group">
+                        <label class="control-label" for="httpStatusCode">HTTP Status Code</label>
+                        <div class="controls">
+                                <input id="path" name="httpStatusCode" class="input-xlarge" placeholder="200" type="text" value="<%=(locals.httpStatusCode)?httpStatusCode:''%>" required="true" >
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="contentType">Content Type</label>
+                        <div class="controls">
+                            <input id="contentType" name="contentType" class="input-xlarge" placeholder="text/json" type="text" value="<%=(locals.contentType)?contentType:''%>" required="true" >
+                        </div>
+                    </div>
+
+
                     <!-- Multiple Radios -->
                     <div class="control-group">
                         <label class="control-label" for="enabled">Status</label>

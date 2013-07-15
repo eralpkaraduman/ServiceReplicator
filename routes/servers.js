@@ -108,7 +108,6 @@ exports.list = function(req, res){
                 displayedServerData = serverList[0];
             }
 
-
             if(displayedServerData == null){
                 // there are no servers
                 res.redirect("/addServer");
