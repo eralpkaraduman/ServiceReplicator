@@ -38,7 +38,6 @@ app.get('/servers/:serverKey', servers.list);
 app.get('/servers', servers.list);
 app.post('/addServer', servers.add);
 app.get('/endpoints/:endpointKey',endpoints.editForm);
-app.get('/endpoints/:endpointKey',endpoints.edit);
 app.get('/addEndpoint/:serverKey',endpoints.addForm);
 app.post('/addEndpoint/:serverKey',endpoints.add);
 app.get('/users', user.list);

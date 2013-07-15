@@ -6,6 +6,8 @@ var servers = require("./servers");
 var check = require('validator').check,
     sanitize = require('validator').sanitize;
 
+var Validator = require('validator').Validator;
+
 
 exports.listEndPoints = function(serverKey,callback){
 
@@ -52,19 +54,8 @@ exports.addForm = function(req,res){
 
 }
 
-
-exports.edit = function(req,res){
-
-
-
-
-
-
-}
-
 exports.editForm = function(req,res){
 
-    var Validator = require('validator').Validator;
     var v = new Validator();
     v.error = function(msg) {
         res.end(msg);
@@ -132,46 +123,80 @@ exports.editForm = function(req,res){
 }
 
 exports.add = function(req,res){
+
     var serverKey = req.param("serverKey");
+    var thisIsNotNullWhenUpdating = null;
+
+    var v = new Validator();
+    v.error = function(msg) {
+        res.end(msg);
+    }
+
+    if(req.param("update")!=null){
+
+        console.log("updating endpoint "+req.param("update"));
+
+        v.check(req.param("update"),"invalid key "+req.param("update")+" to update endpoint").notNull().isAlphanumeric();
+
+        thisIsNotNullWhenUpdating = req.param("update");
+
+    }else if(req.param("delete")!=null){
+
+        console.log("deleting endpoint "+req.param("delete"));
+
+        v.check(req.param("delete"),"invalid key "+req.param("delete")+" to delete endpoint").notNull().isAlphanumeric();
+
+        endpoints.remove(req.param("delete"), function (err) {
+            if (err) {
+                res.end("could not delete "+err );
+            }else{
+                res.redirect('/servers/'+serverKey);
+            }
+
+        });
+
+    }
 
     req.onValidationError(function (msg) {
         res.end(msg);
     });
 
-    servers.getServerList(function(listOfServers){
 
-        var existingServerKeys = [];
-        for(var i=0; i<listOfServers.length; i++){
-            existingServerKeys.push(listOfServers[i].key);
-        }
+    if(req.param("delete")==null){
 
+        servers.getServerList(function(listOfServers){
 
-
-        console.log(req.body);
-
-        req.assert('serverKey', 'invalid server key').notEmpty();
-        req.assert('serverKey','server '+serverKey+' does not exist').isIn(existingServerKeys);
-        req.checkBody('path', 'invalid path').notEmpty().notContains("?").notContains("&");
-        req.checkBody('defaultResponse', 'invalid defaultResponse').notEmpty();
-        req.checkBody('enabled', 'invalid enabled status').notEmpty().isIn(['Enabled','Disabled']);
-
-        var newEndpoint = {
-            enabled:(req.body.enabled=="Enabled"?true:false),
-            path:req.body.path,
-            defaultResponse:req.body.defaultResponse,
-            serverKey:serverKey
-        }
-
-
-        endpoints.save(null,newEndpoint,function(err, key){
-            if (err) { throw err; }else{
-                console.log("created endpoint");
-                res.redirect('servers/'+serverKey);
+            var existingServerKeys = [];
+            for(var i=0; i<listOfServers.length; i++){
+                existingServerKeys.push(listOfServers[i].key);
             }
+
+            req.assert('serverKey', 'invalid server key').notEmpty();
+            req.assert('serverKey','server '+serverKey+' does not exist').isIn(existingServerKeys);
+            req.checkBody('path', 'invalid path').notEmpty().notContains("?").notContains("&");
+            req.checkBody('defaultResponse', 'invalid defaultResponse').notEmpty();
+            req.checkBody('enabled', 'invalid enabled status').notEmpty().isIn(['Enabled','Disabled']);
+
+            var newEndpoint = {
+                enabled:(req.body.enabled=="Enabled"?true:false),
+                path:req.body.path,
+                defaultResponse:req.body.defaultResponse,
+                serverKey:serverKey
+            };
+
+            console.log("thisIsNotNullWhenUpdating "+thisIsNotNullWhenUpdating);
+
+            endpoints.save(thisIsNotNullWhenUpdating,newEndpoint,function(err, key){
+                if (err) { throw err; }else{
+                    console.log("created endpoint "+key);
+
+                    res.redirect('/servers/'+serverKey);
+                }
+            });
+
         });
 
-
-    });
+    }
 
 
 
