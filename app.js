@@ -9,8 +9,21 @@ var express = require('express')
 
 var app = express();
 
+var PORT = null;
+process.argv.forEach(function (val, index, array) {
+    var pair = val.split('=');
+    console.log("pair "+pair);
+
+    if(pair[0]=='port'){
+        PORT = pair[1];
+        console.log("!! WILL TRY TO RUN ON PORT "+PORT+" YOU MAY NEED ADMINISTRATOR RIGHTS !!");
+        return true;
+    }
+
+});
+
 // all environments
-app.set('port', process.env.PORT || 3000);
+app.set('port', PORT || 3000);
 app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
