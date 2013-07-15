@@ -1,8 +1,3 @@
-
-/**
- * Module dependencies.
- */
-
 var express = require('express')
   ,expressValidator = require('express-validator')
   , routes = require('./routes')
@@ -32,6 +27,8 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+app.get("/*", endpoints.handle);
+
 app.get('/', servers.list);
 app.get('/addServer', servers.addForm);
 app.get('/servers/:serverKey', servers.list);
@@ -41,33 +38,11 @@ app.get('/endpoints/:endpointKey',endpoints.editForm);
 app.get('/addEndpoint/:serverKey',endpoints.addForm);
 app.post('/addEndpoint/:serverKey',endpoints.add);
 app.get('/users', user.list);
-
-/*
-app.use(function(req, res, next){
-    res.status(404);
-
-    // respond with html page
-    if (req.accepts('html')) {
-        res.render('404', { url: req.url });
-        return;
-    }
-
-    // respond with json
-    if (req.accepts('json')) {
-        res.send({ error: 'Not found' });
-        return;
-    }
-
-    // default to plain-text. send()
-    res.type('txt').send('Not found');
-});
-*/
+app.post('/deleteServer/:serverKey',servers.delete);
 
 app.locals({
     title: 'Service Replicator',
     navBarItems:[
-    //{title:"Add Server",path:"addServer"},
-    //{title:"Servers",path:"servers"}
     ]
 });
 

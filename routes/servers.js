@@ -70,6 +70,25 @@ exports.add = function(req, res){
 
 };
 
+exports.delete = function(req,res){
+    console.log(req.param("serverKey"));
+
+    servers.remove(req.param("serverKey"), function (err) {
+        if (err) { throw err; }
+
+        console.log("deleted server "+req.param("serverKey"));
+
+        exports.getServerList(function(serverList){
+            if(serverList.length <= 0){
+                res.redirect('/addServer');
+            }else{
+                res.redirect('/servers');
+            }
+        });
+
+    });
+}
+
 exports.list = function(req, res){
 
     renderWithListOfservers = function(displayedServerData){
@@ -87,16 +106,21 @@ exports.list = function(req, res){
 
             if(displayedServerData.key == null && serverList.length>0){
                 displayedServerData = serverList[0];
-
             }
 
 
             if(displayedServerData == null){
                 // there are no servers
                 res.redirect("/addServer");
+                return;
             }
 
-        endpoints.listEndPoints(displayedServerData.key,function(endpointsResult){
+            if(displayedServerData.name == null){
+                res.redirect("/addServer");
+                return;
+            }
+
+            endpoints.listEndPoints(displayedServerData.key,function(endpointsResult){
 
                 console.log('endpoints '+endpointsResult);
 

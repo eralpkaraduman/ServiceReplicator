@@ -81,7 +81,6 @@
                 <h4><%=displayedServer.name%></h4>
             </div>
 
-
             <% for(var i=0; i<endpoints.length; i++) { %>
             <div>
                 <div class="input-append">
@@ -99,11 +98,28 @@
             </div>
             <% } %>
 
-            <button class="btn btn-default">
-                <a href="/addendpoint/<%= displayedServer.key %> ">
-                    Add New Endpoint  <i class="icon-plus-sign"></i>
-                </a>
-            </button>
+            <a href="/addendpoint/<%= displayedServer.key %> " class="btn btn-default">
+                Add New Endpoint  <i class="icon-plus-sign"></i>
+            </a>
+
+            <form class="form-verical" action="/deleteServer/<%= displayedServer.key %>" method="POST">
+                <fieldset>
+
+                    <!-- Delete -->
+                    <div class="control-group">
+                        <label class="control-label" for="deleteEndpoint"></label>
+                        <div class="controls">
+                            <button id="deleteEndpoint" name="deleteEndpoint" class="btn btn-danger">Delete Server</button>
+                        </div>
+                    </div>
+
+
+                </fieldset>
+            </form>
+
+
+
+
 
 
         </div>

@@ -5,6 +5,7 @@ var util = require('util');
 var servers = require("./servers");
 var check = require('validator').check,
     sanitize = require('validator').sanitize;
+var url = require("url");
 
 var Validator = require('validator').Validator;
 
@@ -34,6 +35,7 @@ exports.addForm = function(req,res){
 
     if(serverKey){
         servers.getServer(serverKey,function(serverData){
+
 
 
             console.log(serverData);
@@ -191,7 +193,38 @@ exports.add = function(req,res){
         });
 
     }
+}
 
+exports.handle = function(req,res, next){
 
+    var pathName = url.parse(req.url).pathname;
 
+    if(pathName){
+
+        pathName =  pathName.substr(1,pathName.length);
+
+    }else{
+        next();
+        return;
+    }
+
+    endpoints.find({path:pathName},function (err, results) {
+
+        if(err){
+            next();
+        }else{
+
+            for (var key in results) {
+                var obj = results[key];
+
+                if(obj.path == pathName){
+                    res.end(obj.defaultResponse);
+                    return;
+                }
+
+            }
+            next();
+        }
+
+    });
 }
