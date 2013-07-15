@@ -11,8 +11,6 @@ Small local node.js server which can be used to replicate remote web server endp
   - Tweak responses on the fly. (no yet implemented)
   - Tears of joy.
 
-Usage
-=====
 
 #Prerequisites
 
