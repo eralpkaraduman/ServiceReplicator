@@ -24,15 +24,23 @@ Small local node.js server which can be used to replicate remote web server endp
  - Open terminal and cd into downloaded directory
  - $ npm install
 
-#To Start
+#To Start & Configure
 
- $ sudo node app.js port=80
+ - $ sudo node app.js port=80 (default port is 3000)
+ - On your browser, go to "hocalhost" (if you are not using on 80 port go to localhost:3000 or localhost:THE_PORT)
+ - add a server (more options will be added later)
+ - add endpoints for the server
+ - enter a static response for the endpoint
 
- (default port is 3000)
+#Usage
+
+ - Edit your hosts file or put development arguments on your client code to force it to call localhost rather than remote address
+ - http://localhost/theEndPointYouHaveJustEntered.php will answer as you have configured
+ - have fun.
 
 #To Stop
 
- ctrl+c
+ ctrl+c on terminal
 
 
 To Do
