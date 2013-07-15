@@ -3,7 +3,7 @@ var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
   , servers = require('./routes/servers')
-  ,endpoints = require('./routes/endpoints')
+  , endpoints = require('./routes/endpoints')
   , http = require('http')
   , path = require('path');
 
