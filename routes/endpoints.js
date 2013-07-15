@@ -30,7 +30,7 @@ exports.listEndPoints = function(serverKey,callback){
 
 exports.addForm = function(req,res){
     var serverKey = req.param("serverKey");
-    console.log(serverKey);
+    console.log("serverKey "+serverKey);
 
     if(serverKey){
         servers.getServer(serverKey,function(serverData){
@@ -51,7 +51,6 @@ exports.addForm = function(req,res){
         });
 
     }
-
 }
 
 exports.editForm = function(req,res){
@@ -65,24 +64,25 @@ exports.editForm = function(req,res){
         res.end(msg);
     });
 
-
     var endpointKey = req.param("endpointKey");
+    var serverKeyOfEndpoint = null;
 
     endpoints.all(function (err, results) {
         var allEndpoints = [];
         var allEndpointKeys = [];
-        var serverKeyOfEndpoint;
+        var currentEndpointData = null;
 
         for (var key in results) {
 
-            var endpoint = results[key]
-            endpoint.key = key;
+            var i_endpoint = results[key]
+            i_endpoint.key = key;
 
-            allEndpoints[allEndpoints.length] = endpoint;
+            allEndpoints[allEndpoints.length] = i_endpoint;
             allEndpointKeys[allEndpointKeys.length] = key;
 
-            if(key == endpointKey){
-                serverKeyOfEndpoint = endpoint.serverKey;
+            if(i_endpoint.key == endpointKey){
+                serverKeyOfEndpoint = i_endpoint.serverKey;
+                currentEndpointData = i_endpoint;
             }
         }
 
@@ -92,22 +92,16 @@ exports.editForm = function(req,res){
         req.assert('endpointKey','endpoint '+endpointKey+' does not exist').isIn(allEndpointKeys);
         v.check(serverKeyOfEndpoint,"invalid server key "+serverKeyOfEndpoint).isAlphanumeric().notNull();
 
-        //servers.getServer()
-
-
         servers.getServerList(function (serverList) {
 
-
-
             v.check(serverList,"cannot get list of servers ").len(0);
+            v.check(serverKeyOfEndpoint,"cannot find server "+serverKeyOfEndpoint).notNull();
 
             servers.getServer(serverKeyOfEndpoint,function(serverData){
 
-                v.check(serverKeyOfEndpoint,"cannot find server "+serverKeyOfEndpoint).notNull();
+                //console.log("endpoint "+util.inspect(endpoint));
 
-                console.log("endpoint "+util.inspect(endpoint));
-
-                var params = endpoint;
+                var params = currentEndpointData;
 
                 params.servers = serverList;
                 params.server = {

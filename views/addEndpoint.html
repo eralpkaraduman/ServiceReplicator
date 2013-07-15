@@ -91,9 +91,9 @@
                     <div class="control-group">
                         <label class="control-label" for="path">Path</label>
                         <div class="controls">
-                            <div class="input-prepend">  if (typeof foo == 'undefined')
+                            <div class="input-prepend">
                                 <span class="add-on">/</span>
-                                <input id="path" name="path" class="input-xlarge" placeholder="my/endpoint/path.php" type="text" value="<%=(locals.path)?path:''%>" >
+                                <input id="path" name="path" class="input-xlarge" placeholder="my/endpoint/path.php" type="text" value="<%=(locals.path)?path:''%>" required="true" >
                             </div>
 
                         </div>
@@ -112,15 +112,21 @@
                         <label class="control-label" for="enabled">Status</label>
                         <div class="controls">
                             <label class="radio" for="enabled-0">
-                                <input type="radio" name="enabled" id="enabled-0" value="Enabled" <%if(locals.enabled){ if(enabled==true){%>
-                                    checked="checked"
-                                <%}}else{%>
-                                    checked="checked"
-                                <%}%>>
-                                Enabled
-                            </label>
+                                <input type="radio" name="enabled" id="enabled-0" value="Enabled" <%if(locals.enabled!=null){%>
+
+                                    <%if(enabled==true){%>
+
+                                        checked="checked"
+
+                                    <%}%>
+
+                                <%}else{%>
+
+                                checked="checked"
+
+                                <%}%>>Enabled</label>
                             <label class="radio" for="enabled-1">
-                                <input type="radio" name="enabled" id="enabled-1" value="Disabled" <%if(locals.enabled){ if(enabled==false){%>
+                                <input type="radio" name="enabled" id="enabled-1" value="Disabled" <%if(locals.enabled!=null){ if(enabled==false){%>
                                     checked="checked"
                                 <%}}%>>
                                 Disabled

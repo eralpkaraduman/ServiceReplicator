@@ -49,6 +49,9 @@
 <div class="container">
 
     <div class="row">
+
+        <%if(servers.length>0){%>
+
         <div class="span3 bs-docs-sidebar">
 
 
@@ -74,12 +77,14 @@
 
         </div>
 
+        <%}%>
+
         <div class="span9">
             <!--Body content-->
 
 
             <div class="page-header">
-                <h1>Add Server</h1>
+                <h4>Add Server</h4>
             </div>
 
             <form class="form-horizontal" action="/addServer" method="POST">

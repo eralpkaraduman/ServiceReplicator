@@ -64,7 +64,7 @@ exports.add = function(req, res){
     servers.save(null, newServer, function (err, key) {
         if (err) { throw err; }else{
             console.log("created server");
-            res.redirect('servers/'+key);
+            res.redirect('/servers/'+key);
         }
     });
 
@@ -87,10 +87,14 @@ exports.list = function(req, res){
 
             if(displayedServerData.key == null && serverList.length>0){
                 displayedServerData = serverList[0];
+
             }
 
-            //console.log("sl "+util.inspect(serverList) );
-            //console.log("dsd "+util.inspect(displayedServerData) );
+
+            if(displayedServerData == null){
+                // there are no servers
+                res.redirect("/addServer");
+            }
 
         endpoints.listEndPoints(displayedServerData.key,function(endpointsResult){
 
