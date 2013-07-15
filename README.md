@@ -20,7 +20,7 @@ Small local node.js server which can be used to replicate remote web server endp
 
 #Installation
 
- - Download of clone this repository
+ - Download or clone this repository
  - Open terminal and cd into downloaded directory
  - $ npm install
 
