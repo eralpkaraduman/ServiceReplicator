@@ -8,7 +8,7 @@ Small local node.js server which can be used to replicate remote web server endp
   - Enter service paths
   - Enter endpoint responses
   - Change your .hosts file or put dev args on your code to force app to use this server rather than the remote.
-  - Tweak responses on the fly. (no yet implemented)
+  - Tweak responses on the fly. (not yet implemented)
   - Tears of joy.
 
 ![SCREENSHOT](https://raw.github.com/eralpkaraduman/ServiceReplicator/master/screenshot.jpg)

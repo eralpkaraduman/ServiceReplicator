@@ -60,7 +60,6 @@ app.locals({
 });
 
 app.use(function(req, res, next){
-    //res.send(404, 'Sorry cant find that!');
     res.writeHead(404);
     res.end();
 });
