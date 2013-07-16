@@ -38,11 +38,13 @@ Small local node.js server which can be used to replicate remote web server endp
 
  - Edit your hosts file or put development arguments on your client code to force it to call localhost rather than remote address
 
-    \#if TARGET_IPHONE_SIMULATOR // simulator?
-    \#define apiBase @"http://localhost/api"
-    \#else
-    \#define apiBase @"http://myRemoteServer/api"
-    \#endif
+```objc
+#if TARGET_IPHONE_SIMULATOR // simulator?
+#define apiBase @"http://localhost/api"
+#else
+#define apiBase @"http://myRemoteServer/api"
+#endif
+```
 
  - http://localhost/theEndPointYouHaveJustEntered.php will answer as you have configured
  - have fun.
