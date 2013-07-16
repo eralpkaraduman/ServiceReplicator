@@ -60,6 +60,7 @@ To Do
  - Toggle servers on/off
  - Parametric responses
  - Capturing requests
+ - lint json
 
 
 
