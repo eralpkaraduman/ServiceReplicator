@@ -42,7 +42,7 @@ Small local node.js server which can be used to replicate remote web server endp
 #if TARGET_IPHONE_SIMULATOR // simulator?
 #define apiBase @"http://localhost/api"
 #else
-#define apiBase @"http://myRemoteServer/api"
+#define apiBase @"http://myRemoteServer.com/api"
 #endif
 ```
 
