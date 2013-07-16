@@ -59,6 +59,12 @@ app.locals({
     ]
 });
 
+app.use(function(req, res, next){
+    //res.send(404, 'Sorry cant find that!');
+    res.writeHead(404);
+    res.end();
+});
+
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
