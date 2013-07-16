@@ -125,7 +125,9 @@ exports.add = function(req,res){
 
     var v = new Validator();
     v.error = function(msg) {
+        res.writeHead(500,{'content-type':'text/html'});
         res.end(msg);
+        return;
     }
 
     if(req.param("update")!=null){
@@ -167,6 +169,8 @@ exports.add = function(req,res){
                 existingServerKeys.push(listOfServers[i].key);
             }
 
+            console.log("existingServerKeys-ho",existingServerKeys);
+
             req.assert('serverKey', 'invalid server key').notEmpty();
             req.assert('serverKey','server '+serverKey+' does not exist').isIn(existingServerKeys);
             req.checkBody('path', 'invalid path').notEmpty().notContains("?").notContains("&");
@@ -174,26 +178,31 @@ exports.add = function(req,res){
             req.checkBody('enabled', 'invalid enabled status').notEmpty().isIn(['Enabled','Disabled']);
             req.checkBody('httpStatusCode','invalid HTTP status code').notEmpty().isNumeric();
             req.checkBody('contentType','invalid HTTP status code').notEmpty();
+            req.checkBody('delay','invalid delay').notEmpty().isNumeric().min(0);
 
 
-            var newEndpoint = {
-                enabled:(req.body.enabled=="Enabled"?true:false),
-                path:req.body.path,
-                defaultResponse:req.body.defaultResponse,
-                serverKey:serverKey,
-                httpStatusCode:req.body.httpStatusCode,
-                contentType:req.body.contentType
-            };
+            if(req.validationErrors()==null){
+                var newEndpoint = {
+                    enabled:(req.body.enabled=="Enabled"?true:false),
+                    path:req.body.path,
+                    defaultResponse:req.body.defaultResponse,
+                    serverKey:serverKey,
+                    httpStatusCode:req.body.httpStatusCode,
+                    contentType:req.body.contentType,
+                    delay:req.body.delay
+                };
 
-            console.log("thisIsNotNullWhenUpdating "+thisIsNotNullWhenUpdating);
+                console.log("thisIsNotNullWhenUpdating "+thisIsNotNullWhenUpdating);
 
-            endpoints.save(thisIsNotNullWhenUpdating,newEndpoint,function(err, key){
-                if (err) { throw err; }else{
-                    console.log("created endpoint "+key);
+                endpoints.save(thisIsNotNullWhenUpdating,newEndpoint,function(err, key){
+                    if (err) { throw err; }else{
+                        console.log("created endpoint "+key);
+                        res.redirect('/servers/'+serverKey);
+                    }
+                });
+            }
 
-                    res.redirect('/servers/'+serverKey);
-                }
-            });
+
 
         });
 
@@ -222,12 +231,17 @@ exports.handle = function(req,res, next){
             for (var key in results) {
                 var obj = results[key];
 
-                if(obj.path == pathName){
-                    res.writeHead(Number(obj.httpStatusCode), {'content-type':String(obj.contentType)});
-                    res.end(obj.defaultResponse);
-                    return;
-                }
+                if(obj.delay==null)obj.delay = 0;
 
+                setTimeout(function(){
+                    if(obj.path == pathName){
+                        res.writeHead(Number(obj.httpStatusCode), {'content-type':String(obj.contentType)});
+                        res.end(obj.defaultResponse);
+                    }
+                },1000*obj.delay);
+
+
+                return;
             }
             next();
         }
