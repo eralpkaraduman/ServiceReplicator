@@ -92,7 +92,7 @@ exports.editForm = function(req,res){
 
         req.assert('endpointKey', 'invalid endpoint key').notEmpty();
         req.assert('endpointKey','endpoint '+endpointKey+' does not exist').isIn(allEndpointKeys);
-        v.check(serverKeyOfEndpoint,"invalid server key "+serverKeyOfEndpoint).isAlphanumeric().notNull();
+        v.check(serverKeyOfEndpoint,"invalid server key "+serverKeyOfEndpoint).isAlphanumeric().notEmpty();
 
         servers.getServerList(function (serverList) {
 
