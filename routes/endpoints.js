@@ -1,6 +1,6 @@
 var nStore = require('nStore');
 nStore = nStore.extend(require('nstore/query')());
-var endpoints = nStore.new('data/endpoints.db',function(){console.log("endpoints loaded")});
+var endpoints = nStore.new('data/endpoints.db',function(){});
 var util = require('util');
 var servers = require("./servers");
 var check = require('validator').check,
@@ -231,15 +231,18 @@ exports.handle = function(req,res, next){
             for (var key in results) {
                 var obj = results[key];
 
-                if(obj.delay==null)obj.delay = 0;
+                if(obj.enabled != false){
+                    if(obj.delay==null)obj.delay = 0;
 
-                setTimeout(function(){
-                    if(obj.path == pathName){
-                        res.writeHead(Number(obj.httpStatusCode), {'content-type':String(obj.contentType)});
-                        res.end(obj.defaultResponse);
-                    }
-                },1000*obj.delay);
-
+                    setTimeout(function(){
+                        if(obj.path == pathName){
+                            res.writeHead(Number(obj.httpStatusCode), {'content-type':String(obj.contentType)});
+                            res.end(obj.defaultResponse);
+                        }
+                    },1000*obj.delay);
+                }else{
+                    next();
+                }
 
                 return;
             }
