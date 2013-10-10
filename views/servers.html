@@ -92,7 +92,9 @@
                             <a href="/endpoints/<%=endpoints[i].key%>?status=enabled" class="btn btn-danger">Disabled</a>
                         <%}%>
 
-                        <a href="/endpoints/<%=endpoints[i].key%>" class="btn btn btn-primary">Edit</a>
+                        <a href="/endpoints/<%=endpoints[i].key%>" class="btn btn btn-primary">Edit <i class="icon-wrench"></i></a>
+
+                        <a href="/<%=endpoints[i].path%>" target="_blank" class="btn btn btn">Open <i class="icon-share"></i></a>
 
                 </div>
             </div>

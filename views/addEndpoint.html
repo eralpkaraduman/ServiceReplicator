@@ -8,9 +8,19 @@
     <meta name="author" content="">
 
     <!-- Le styles -->
+
+    <script src="/js/jquery-1.10.2.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+
+    <script src="/lib/codemirror.js"></script>
+    <link rel="stylesheet" href="/lib/codemirror.css">
+    <script src="/mode/javascript/javascript.js"></script>
+
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/bootstrap-responsive.min.css" rel="stylesheet">
     <link href="/css/docs.css" rel="stylesheet">
+
+
 
 </head>
 
@@ -102,9 +112,21 @@
                     <!-- Textarea -->
                     <div class="control-group">
                         <label class="control-label" for="defaultResponse">Default Response</label>
+
                         <div class="controls">
-                            <textarea required="true" id="defaultResponse" name="defaultResponse" placeholder="{'success': true,data: [{'name': 'a','value': 1},{'name': 'b','value': 2}]}" ><%if(locals.defaultResponse){%><%=defaultResponse%><%}%></textarea>
+                            <textarea style="width: 100%;height:600px" required="true" id="defaultResponse" name="defaultResponse" placeholder="{'success': true,data: [{'name': 'a','value': 1},{'name': 'b','value': 2}]}" ><%if(locals.defaultResponse){%><%=defaultResponse%><%}%></textarea>
                         </div>
+                        <div id="editor">function foo(items) {
+                            var x = "All this is syntax highlighted";
+                            return x;
+                            }</div>
+
+                        <script src="/js/ace.js" type="text/javascript" charset="utf-8"></script>
+                        <script>
+                            var editor = ace.edit("editor");
+                            editor.setTheme("ace/theme/monokai");
+                            editor.getSession().setMode("ace/mode/javascript");
+                        </script>
                     </div>
 
 
@@ -175,6 +197,8 @@
                 </fieldset>
             </form>
 
+
+
             <%if(locals.path!=null){%>
 
                 <form class="form-horizontal" action="/addEndpoint/<%=server.key%><%=(locals.key)?'?delete='+key:''%>" method="POST">
@@ -197,6 +221,10 @@
         </div>
 
     </div>
+
+
+
+
 </div> <!-- /container -->
 
 <!-- Le javascript
@@ -204,8 +232,37 @@
 <!-- Placed at the end of the document so the pages load faster -->
 
 
-<script src="/js/jquery-1.10.2.min.js"></script>
-<script src="/js/bootstrap.min.js"></script>
+
+
+
+
+<script>
+
+    $( document ).ready(function() {
+
+        /*
+        var myCodeMirror = CodeMirror(function(elt) {
+            myTextArea.parentNode.replaceChild(elt, myTextArea);
+        }, {value: myTextArea.value});
+        */
+        //var myCodeMirror = CodeMirror(document.body);
+
+
+    //Console.log("ready");
+        //var myCodeMirror = CodeMirror.fromTextArea($("#defaultResponse")[0]);
+    /*
+
+
+    var editor = CodeMirror.fromTextArea($("#defaultResponse")[0], {
+        mode: "text/json"
+    });
+    */
+
+
+    });
+
+
+</script>
 
 </body>
 </html>

@@ -8,6 +8,7 @@ var check = require('validator').check,
 var url = require("url");
 
 var Validator = require('validator').Validator;
+var querystring = require('querystring');
 
 
 exports.listEndPoints = function(serverKey,callback){
@@ -22,7 +23,7 @@ exports.listEndPoints = function(serverKey,callback){
             serverEndpoints.push(obj);
         }
 
-        console.log(serverEndpoints);
+        //console.log(serverEndpoints);
 
         callback(serverEndpoints);
     });
@@ -36,9 +37,7 @@ exports.addForm = function(req,res){
     if(serverKey){
         servers.getServer(serverKey,function(serverData){
 
-
-
-            console.log(serverData);
+            //console.log(serverData);
 
             servers.getServerList(function (serverList) {
 
@@ -88,7 +87,7 @@ exports.editForm = function(req,res){
             }
         }
 
-        console.log("endps "+allEndpointKeys);
+        //console.log("endps "+allEndpointKeys);
 
         req.assert('endpointKey', 'invalid endpoint key').notEmpty();
         req.assert('endpointKey','endpoint '+endpointKey+' does not exist').isIn(allEndpointKeys);
@@ -103,7 +102,13 @@ exports.editForm = function(req,res){
 
                 //console.log("endpoint "+util.inspect(endpoint));
 
+
+
                 var params = currentEndpointData;
+
+                params.defaultResponse = JSON.stringify(JSON.parse(params.defaultResponse),null,4);
+
+
 
                 params.servers = serverList;
                 params.server = {
@@ -173,7 +178,7 @@ exports.add = function(req,res){
 
             req.assert('serverKey', 'invalid server key').notEmpty();
             req.assert('serverKey','server '+serverKey+' does not exist').isIn(existingServerKeys);
-            req.checkBody('path', 'invalid path').notEmpty().notContains("?").notContains("&");
+            //req.checkBody('path', 'invalid path').notEmpty().notContains("?").notContains("&");
             req.checkBody('defaultResponse', 'invalid defaultResponse').notEmpty();
             req.checkBody('enabled', 'invalid enabled status').notEmpty().isIn(['Enabled','Disabled']);
             req.checkBody('httpStatusCode','invalid HTTP status code').notEmpty().isNumeric();
@@ -215,39 +220,130 @@ exports.handle = function(req,res, next){
 
     if(pathName){
 
-        pathName =  pathName.substr(1,pathName.length);
+        //pathName =  pathName.substr(1,pathName.length);
 
     }else{
         next();
         return;
     }
 
-    endpoints.find({path:pathName},function (err, results) {
+    var testParamsForRequestURL = function(endPointParams,reqURL){
+
+        if(endPointParams){
+
+            var endPointParamsObject = querystring.parse(endPointParams);
+
+
+            var reqURLQuery = url.parse(request.url, true).query;
+            //var query = url_parts.query;
+            //url.parse("http://localhost/"+obj.path)
+
+            //var reqParamsObject = querystring.parse(reqURLQuery);
+
+            //var reqParams = url.parse(req.url).query;
+            //console.log(reqParams);
+            //console.log(endPointParams);
+
+            return true;
+
+        }else{
+            return true;
+        }
+
+        return true;
+    };
+
+    endpoints.find({enabled:true},function (err, results){
+
+        var found = false;
 
         if(err){
             next();
         }else{
 
+            console.log(results);
+
             for (var key in results) {
                 var obj = results[key];
 
-                if(obj.enabled != false){
+                var obj_pathName = url.parse("http://localhost/"+obj.path).pathname;
+                var obj_query = url.parse("http://localhost/"+obj.path).query;
+
+                if(obj_pathName == pathName){
+
+                        var paramsOK = false;
+
+                        var endPointParams = querystring.parse(obj_query);
+                        var reqURLQuery = url.parse(request.url, true).query;
+
+
+                        if(endPointParams != null){
+
+
+                            paramsOK = true;
+
+                        }else{
+                            paramsOK = true;
+                        }
+
+
+                        if(paramsOK == true){
+                            found = true;
+
+                            if(obj.delay==null)obj.delay = 0;
+                            setTimeout(function(){
+
+                                console.log(String(obj.contentType)+"; charset=utf8");
+
+                                res.writeHead(Number(obj.httpStatusCode), {
+                                    'content-Type':String(obj.contentType)+"; charset=utf8"
+                                });
+                                res.end(obj.defaultResponse);
+
+                            },1000*obj.delay);
+
+                            return;
+                        }
+                }
+
+                    /*
                     if(obj.delay==null)obj.delay = 0;
 
                     setTimeout(function(){
                         if(obj.path == pathName){
-                            res.writeHead(Number(obj.httpStatusCode), {'content-type':String(obj.contentType)});
-                            res.end(obj.defaultResponse);
+
+                            if(obj.enabled != false){
+
+                                res.setEncoding('utf8');
+                                res.writeHead(Number(obj.httpStatusCode), {'content-type':String(obj.contentType)});
+
+                                var ob_json =  JSON.parse(obj.defaultResponse);
+
+
+                                res.end();
+
+                            }else{
+                                next();
+                                return;
+                            }
+
+
+
                         }
                     },1000*obj.delay);
-                }else{
-                    next();
-                }
+                    */
 
-                return;
+                //return;
             }
-            next();
+
+            if(found == false){
+                next();
+            }
+
+
         }
+
+        //next();
 
     });
 }

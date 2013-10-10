@@ -121,7 +121,7 @@ exports.list = function(req, res){
 
             endpoints.listEndPoints(displayedServerData.key,function(endpointsResult){
 
-                console.log('endpoints '+endpointsResult);
+                //console.log('endpoints '+endpointsResult);
 
                 res.render('servers',{
                     servers:serverList,
