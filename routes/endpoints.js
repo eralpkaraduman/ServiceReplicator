@@ -264,12 +264,17 @@ exports.handle = function(req,res, next){
                     var objParams = querystring.parse(obj_query);
 
                     if(Object.keys(reqParams).length < Object.keys(objParams).length){
-                        scoreObject.score --;
+                        scoreObject.score--;
+                    }
+
+                    if(Object.keys(reqParams).length == 0){ // if has no params it has higher priority for fallback purposes
+                        scoreObject.score++;
                     }
 
                     for (var obj_key in objParams) {
                         var obj_val = objParams[obj_key];
                         var req_val = reqParams[obj_key];
+
 
                         if(obj_key in reqParams){
                             scoreObject.score +=3;
