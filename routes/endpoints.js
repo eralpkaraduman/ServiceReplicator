@@ -106,7 +106,19 @@ exports.editForm = function(req,res){
 
                 var params = currentEndpointData;
 
-                params.defaultResponse = JSON.stringify(JSON.parse(params.defaultResponse),null,4);
+                var parsedJSON = null;
+
+                try{
+                    parsedJSON = JSON.parse(params.defaultResponse);
+                }catch(e){
+                    console.log("defaultresponse is not json");
+                }
+
+                if(parsedJSON){
+                    params.defaultResponse = JSON.stringify(parsedJSON,null,4);
+                }
+
+
 
 
 
@@ -227,41 +239,13 @@ exports.handle = function(req,res, next){
         return;
     }
 
-    var testParamsForRequestURL = function(endPointParams,reqURL){
-
-        if(endPointParams){
-
-            var endPointParamsObject = querystring.parse(endPointParams);
-
-
-            var reqURLQuery = url.parse(request.url, true).query;
-            //var query = url_parts.query;
-            //url.parse("http://localhost/"+obj.path)
-
-            //var reqParamsObject = querystring.parse(reqURLQuery);
-
-            //var reqParams = url.parse(req.url).query;
-            //console.log(reqParams);
-            //console.log(endPointParams);
-
-            return true;
-
-        }else{
-            return true;
-        }
-
-        return true;
-    };
-
     endpoints.find({enabled:true},function (err, results){
-
-        var found = false;
 
         if(err){
             next();
         }else{
 
-            console.log(results);
+            var responseAndParamScores = [];
 
             for (var key in results) {
                 var obj = results[key];
@@ -269,81 +253,70 @@ exports.handle = function(req,res, next){
                 var obj_pathName = url.parse("http://localhost/"+obj.path).pathname;
                 var obj_query = url.parse("http://localhost/"+obj.path).query;
 
+
+
                 if(obj_pathName == pathName){
 
-                        var paramsOK = false;
+                    var scoreObject = {obj:obj,score:0};
 
-                        var endPointParams = querystring.parse(obj_query);
-                        var reqURLQuery = url.parse(request.url, true).query;
+                    var reqURLQuery = url.parse(req.url).query;
+                    var reqParams =  querystring.parse(reqURLQuery);
+                    var objParams = querystring.parse(obj_query);
 
+                    if(Object.keys(reqParams).length < Object.keys(objParams).length){
+                        scoreObject.score --;
+                    }
 
-                        if(endPointParams != null){
+                    for (var obj_key in objParams) {
+                        var obj_val = objParams[obj_key];
+                        var req_val = reqParams[obj_key];
 
+                        if(obj_key in reqParams){
+                            scoreObject.score +=3;
 
-                            paramsOK = true;
-
-                        }else{
-                            paramsOK = true;
+                            if(obj_val != req_val){ // if req has wrong answer PUNISH HIM
+                                scoreObject.score-=2;
+                                if(req_val == null){ // bu if he decided to say nothing, give him a little cheer up
+                                    scoreObject.score ++;
+                                }
+                            }
                         }
 
 
-                        if(paramsOK == true){
-                            found = true;
+                    }
 
-                            if(obj.delay==null)obj.delay = 0;
-                            setTimeout(function(){
+                    responseAndParamScores.push(scoreObject);
 
-                                console.log(String(obj.contentType)+"; charset=utf8");
+                }
+            }
 
-                                res.writeHead(Number(obj.httpStatusCode), {
-                                    'content-Type':String(obj.contentType)+"; charset=utf8"
-                                });
-                                res.end(obj.defaultResponse);
+            if(responseAndParamScores.length > 0){
 
-                            },1000*obj.delay);
-
-                            return;
+                var winner = responseAndParamScores[0];
+                if(responseAndParamScores.length>0){
+                    for(var i=1; i<responseAndParamScores.length; i++){
+                        if(responseAndParamScores[i].score > winner.score ){
+                            winner = responseAndParamScores[i];
                         }
+                    }
                 }
 
-                    /*
-                    if(obj.delay==null)obj.delay = 0;
+                if(winner.delay==null)winner.delay = 0;
+                setTimeout(function(){
 
-                    setTimeout(function(){
-                        if(obj.path == pathName){
+                    res.writeHead(Number(winner.obj.httpStatusCode), {
+                        'content-Type':String(winner.obj.contentType)+"; charset=utf8"
+                    });
+                    res.end(winner.obj.defaultResponse);
 
-                            if(obj.enabled != false){
+                },1000*winner.obj.delay);
 
-                                res.setEncoding('utf8');
-                                res.writeHead(Number(obj.httpStatusCode), {'content-type':String(obj.contentType)});
+                return;
 
-                                var ob_json =  JSON.parse(obj.defaultResponse);
-
-
-                                res.end();
-
-                            }else{
-                                next();
-                                return;
-                            }
-
-
-
-                        }
-                    },1000*obj.delay);
-                    */
-
-                //return;
-            }
-
-            if(found == false){
+            }else{
                 next();
             }
-
-
         }
-
-        //next();
 
     });
 }
