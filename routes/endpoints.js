@@ -1,4 +1,4 @@
-var nStore = require('nStore');
+var nStore = require('nstore');
 nStore = nStore.extend(require('nstore/query')());
 var endpoints = nStore.new('data/endpoints.db',function(){});
 var util = require('util');

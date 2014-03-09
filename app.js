@@ -12,11 +12,10 @@ var app = express();
 var PORT = null;
 process.argv.forEach(function (val, index, array) {
     var pair = val.split('=');
-    console.log("pair "+pair);
 
     if(pair[0]=='port'){
         PORT = pair[1];
-        console.log("!! WILL TRY TO RUN ON PORT "+PORT+" YOU MAY NEED ADMINISTRATOR RIGHTS !!");
+        console.log("WILL TRY TO RUN ON PORT "+PORT+" YOU MAY NEED ADMINISTRATOR RIGHTS");
         return true;
     }
 
@@ -67,4 +66,3 @@ app.use(function(req, res, next){
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
-
