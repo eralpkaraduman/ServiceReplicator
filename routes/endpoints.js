@@ -226,6 +226,12 @@ exports.add = function(req,res){
     }
 }
 
+exports.handlePost = function(req,res,next){
+
+    exports.handle(req,res,next);
+
+}
+
 exports.handle = function(req,res, next){
 
     var pathName = url.parse(req.url).pathname;

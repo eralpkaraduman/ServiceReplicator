@@ -40,6 +40,7 @@ if ('development' == app.get('env')) {
 }
 
 app.get("/*", endpoints.handle);
+app.post("/*", endpoints.handlePost);
 
 app.get('/', servers.list);
 app.get('/addServer', servers.addForm);
