@@ -57,7 +57,7 @@ exports.addForm = function(req,res){
 exports.editForm = function(req,res){
 
     var v = new Validator();
-    v.error = function(msg) {
+    v.error = function(msg) { 
         res.end(msg);
     }
 

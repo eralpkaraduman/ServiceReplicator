@@ -54,7 +54,7 @@ app.get('/users', user.list);
 app.post('/deleteServer/:serverKey',servers.delete);
 
 app.locals({
-    title: 'Service Replicator',
+    title: 'Service Replicator v0.2',
     navBarItems:[
     ]
 });
